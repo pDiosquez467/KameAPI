@@ -30,22 +30,21 @@ app.get('/api/v1/usuarios/:id', async (req, res) => {
 })
 
 app.post('/api/v1/usuarios', async (req, res) => {
-    const {nombre, dinero, personaje_seleccionado} = req.body
+  const { nombre, dinero, personaje_seleccionado } = req.body
 
-    if (nombre === undefined) {
-        res.status(400).json({error: 'Faltan campos obligatorios'})
-        return 
+  if (!nombre) {
+    return res.status(400).json({ error: 'Faltan campos obligatorios' })
+  }
+
+  const nuevo = await prisma.usuario.create({
+    data: {
+      nombre,
+      dinero: dinero ?? 0,
+      personaje_seleccionado
     }
+  })
 
-    const nuevo = await prisma.usuario.create({
-        data: {
-            nombre: nombre,
-            dinero: dinero ?? 0, 
-            personaje_seleccionado: personaje_seleccionado
-        }
-    })
-
-    res.status(201).json(nuevo)
+  res.status(201).json(nuevo)
 })
 
 app.delete('/api/v1/usuarios/:id', (req, res) => {
