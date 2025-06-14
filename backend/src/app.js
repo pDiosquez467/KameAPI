@@ -2,30 +2,17 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+ 
 app.use(express.json())
-
-let usuarios = [
-    {
-        id: 1,
-        nombre: "lioMessi",
-        dinero: 100,
-        personaje_seleccionado: 'Vegeta'
-    }, 
-    {
-        id: 2,
-        nombre: "danielLarusso",
-        dinero: 200,
-        personaje_seleccionado: 'Krilin'
-    },
-]
-let personajes = []
-let desbloqueados = []
 
 app.get('/', (req, res) => {
   res.send('DragonBall App!')
 })
 
-app.get('/api/v1/usuarios', (req, res) => {
+app.get('/api/v1/usuarios', async (req, res) => {
+    const usuarios = await prisma.usuario.findMany()
     res.json(usuarios)
 })
 
