@@ -1,21 +1,28 @@
-👤 Usuarios
-───────────────
-id                   PK
-nombre               TEXT
-dinero               NUMERIC / INTEGER
-personaje_seleccionado   FK → Personajes(id)
+### 👤 Usuarios
 
+| Campo                    | Tipo     | Clave     | Descripción                            |
+|--------------------------|----------|-----------|----------------------------------------|
+| `id`                     | INTEGER  | PK        | Identificador único del usuario        |
+| `nombre`                 | TEXT     |           | Nombre del usuario                     |
+| `dinero`                 | INTEGER  |           | Dinero disponible                      |
+| `personaje_seleccionado`| INTEGER  | FK        | Personaje seleccionado (referencia)    |
 
-🧙‍♂️ Personajes
-───────────────
-id                   PK
-nombre               TEXT
-ki                   INTEGER
-precio               NUMERIC
+---
 
+### 🧙‍♂️ Personajes
 
-🔓 Personajes_Desbloqueados
-───────────────
-id_usuario           FK → Usuarios(id)
-id_personaje         FK → Personajes(id)
-PK(id_usuario, id_personaje)
+| Campo     | Tipo     | Clave     | Descripción                 |
+|-----------|----------|-----------|-----------------------------|
+| `id`      | INTEGER  | PK        | Identificador del personaje |
+| `nombre`  | TEXT     |           | Nombre del personaje        |
+| `ki`      | INTEGER  |           | Nivel de ki                 |
+| `precio`  | INTEGER  |           | Precio para desbloquear     |
+
+---
+
+### 🧩 Personajes desbloqueados
+
+| Campo          | Tipo     | Clave     | Descripción                          |
+|----------------|----------|-----------|--------------------------------------|
+| `id_usuario`   | INTEGER  | PK, FK    | Usuario que desbloqueó el personaje |
+| `id_personaje` | INTEGER  | PK, FK    | Personaje desbloqueado               |
