@@ -5,7 +5,7 @@
 | `id`                     | INTEGER  | PK        | Identificador único del usuario        |
 | `nombre`                 | TEXT     |           | Nombre del usuario                     |
 | `dinero`                 | INTEGER  |           | Dinero disponible                      |
-| `personaje_seleccionado`| INTEGER  | FK        | Personaje seleccionado (referencia)    |
+| `personaje_seleccionado` | DECIMAL  | FK        | Personaje seleccionado (referencia)    |
 
 ---
 
@@ -16,7 +16,7 @@
 | `id`      | INTEGER  | PK        | Identificador del personaje |
 | `nombre`  | TEXT     |           | Nombre del personaje        |
 | `ki`      | INTEGER  |           | Nivel de ki                 |
-| `precio`  | INTEGER  |           | Precio para desbloquear     |
+| `precio`  | DECIMAL  |           | Precio para desbloquear     |
 
 ---
 
