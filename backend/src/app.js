@@ -4,7 +4,7 @@ const port = 3000
 
 app.use(express.json())
 
-const usuarios = [
+let usuarios = [
     {
         id: 1,
         nombre: "lioMessi",
@@ -18,8 +18,8 @@ const usuarios = [
         personaje_seleccionado: 'Krilin'
     },
 ]
-const personajes = []
-const desbloqueados = []
+let personajes = []
+let desbloqueados = []
 
 app.get('/', (req, res) => {
   res.send('DragonBall App!')
@@ -58,6 +58,20 @@ app.post('/api/v1/usuarios', (req, res) => {
     usuarios.push(nuevo)
     res.status(201).json(nuevo)
 })
+
+app.delete('/api/v1/usuarios/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const usuario = usuarios.find(us => us.id === id) 
+
+    if (!usuario) {
+        res.status(404).json({error: "Usuario NO encontrado"})
+        return 
+    }
+
+    usuarios = usuarios.filter(us => us.id !== id)
+    res.status(200).json(usuario)
+})
+
 
 app.listen(port, () => {
   console.log(`Dragon Ball app listening on port ${port}`)
