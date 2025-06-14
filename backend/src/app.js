@@ -19,7 +19,7 @@ app.get('/api/v1/usuarios', async (req, res) => {
 app.get('/api/v1/usuarios/:id', async (req, res) => {
     const id = Number(req.params.id)
     try {
-        const usuario = await prisma.usuario.findFirstOrThrow({
+        const usuario = await prisma.usuario.findUnique({
             where: { id }
         })
         res.json(usuario)
@@ -39,7 +39,7 @@ app.post('/api/v1/usuarios', async (req, res) => {
   const nuevo = await prisma.usuario.create({
     data: {
       nombre,
-      dinero: dinero ?? 0,
+      dinero: dinero,
       personaje_seleccionado
     }
   })
@@ -47,18 +47,23 @@ app.post('/api/v1/usuarios', async (req, res) => {
   res.status(201).json(nuevo)
 })
 
-app.delete('/api/v1/usuarios/:id', (req, res) => {
+app.delete('/api/v1/usuarios/:id', async (req, res) => {
     const id = Number(req.params.id)
-    const usuario = usuarios.find(us => us.id === id) 
+    
+    try {
+        const usuario = await prisma.usuario.delete({
+            where: { id: id }
+        })
+        res.status(200).json(usuario)
 
-    if (!usuario) {
-        res.status(404).json({error: "Usuario NO encontrado"})
-        return 
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Usuario NO encontrado" })
+        }
+        res.status(500).json({ error: "Error interno al eliminar el usuario" })
     }
-
-    usuarios = usuarios.filter(us => us.id !== id)
-    res.status(200).json(usuario)
 })
+
 
 app.put('/api/v1/usuarios/:id', (req, res) => {
     const id = Number(req.params.id);
