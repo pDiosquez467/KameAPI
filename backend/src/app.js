@@ -72,6 +72,26 @@ app.delete('/api/v1/usuarios/:id', (req, res) => {
     res.status(200).json(usuario)
 })
 
+app.put('/api/v1/usuarios/:id', (req, res) => {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "El 'id' debe ser un número válido" });
+    }
+
+    const usuario = usuarios.find(us => us.id === id);
+    if (!usuario) {
+        return res.status(404).json({ error: "Usuario NO encontrado" });
+    }
+
+    const { nombre, dinero, personaje_seleccionado } = req.body;
+
+    usuario.nombre = nombre ?? usuario.nombre;
+    usuario.dinero = dinero ?? usuario.dinero;
+    usuario.personaje_seleccionado = personaje_seleccionado ?? usuario.personaje_seleccionado;
+
+    return res.status(200).json(usuario);
+});
 
 app.listen(port, () => {
   console.log(`Dragon Ball app listening on port ${port}`)
