@@ -5,10 +5,8 @@ services:
     image: postgres:16
     container_name: dragonball-postgres
     restart: always
-    environment:
-      POSTGRES_USER: pdiosquez
-      POSTGRES_PASSWORD: kamehameha
-      POSTGRES_DB: dragonball
+    env_file:
+      - .env  
     ports:
       - "5432:5432"
     volumes:
