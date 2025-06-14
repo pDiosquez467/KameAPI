@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: dragonball-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: pdiosquez
+      POSTGRES_PASSWORD: kamehameha
+      POSTGRES_DB: dragonball
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres-data:
