@@ -40,6 +40,25 @@ app.get('/api/v1/usuarios/:id', (req, res) => {
 
 })
 
+app.post('/api/v1/usuarios', (req, res) => {
+    const {nombre, dinero, personaje_seleccionado} = req.body
+
+    if (nombre === undefined) {
+        res.status(400).json({error: 'Faltan campos obligatorios'})
+        return 
+    }
+
+    const nuevo = {
+        id: usuarios.length + 1,
+        nombre: nombre,
+        dinero: dinero ?? 0, 
+        personaje_seleccionado: personaje_seleccionado,
+    }
+
+    usuarios.push(nuevo)
+    res.status(201).json(nuevo)
+})
+
 app.listen(port, () => {
   console.log(`Dragon Ball app listening on port ${port}`)
 })
