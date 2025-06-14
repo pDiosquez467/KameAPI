@@ -16,18 +16,20 @@ app.get('/api/v1/usuarios', async (req, res) => {
     res.json(usuarios)
 })
 
-app.get('/api/v1/usuarios/:id', (req, res) => {
-    const usuario = usuarios.find(us => us.id == req.params.id)
-    
-    if (usuario === undefined) {
-        res.sendStatus(404)
-        return 
-    }
-    res.json(usuario)
-
+app.get('/api/v1/usuarios/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    try {
+        const usuario = await prisma.usuario.findFirstOrThrow({
+            where: { id }
+        })
+        res.json(usuario)
+        
+    } catch (error) {
+        res.status(404).send({error: "Usuario NO encontrado"})
+    }  
 })
 
-app.post('/api/v1/usuarios', (req, res) => {
+app.post('/api/v1/usuarios', async (req, res) => {
     const {nombre, dinero, personaje_seleccionado} = req.body
 
     if (nombre === undefined) {
@@ -35,14 +37,14 @@ app.post('/api/v1/usuarios', (req, res) => {
         return 
     }
 
-    const nuevo = {
-        id: usuarios.length + 1,
-        nombre: nombre,
-        dinero: dinero ?? 0, 
-        personaje_seleccionado: personaje_seleccionado,
-    }
+    const nuevo = await prisma.usuario.create({
+        data: {
+            nombre: nombre,
+            dinero: dinero ?? 0, 
+            personaje_seleccionado: personaje_seleccionado
+        }
+    })
 
-    usuarios.push(nuevo)
     res.status(201).json(nuevo)
 })
 
