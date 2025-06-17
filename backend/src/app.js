@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express')
 const app = express()
 const port = 3000
@@ -21,6 +23,24 @@ app.get('/api/v1/usuarios/:id', async (req, res) => {
     try {
         const usuario = await prisma.usuario.findUnique({
             where: { id }
+        })
+        res.json(usuario)
+        
+    } catch (error) {
+        res.status(404).send({error: "Usuario NO encontrado"})
+    }  
+})
+
+app.get('/api/v1/usuarios/:id/personajes', async (req, res) => {
+    const id = Number(req.params.id)
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: { 
+                id
+             }, 
+             include: {
+                Personajes_desbloqueados: true
+             }
         })
         res.json(usuario)
         
