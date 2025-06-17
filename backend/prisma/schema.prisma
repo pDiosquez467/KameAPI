@@ -12,6 +12,8 @@ model Usuario {
   nombre                 String  @unique
   dinero                 Decimal @default(0)
   personaje_seleccionado String
+
+  Personajes_desbloqueados Personajes_desbloqueados[]
 }
 
 model Personaje {
@@ -19,4 +21,16 @@ model Personaje {
   nombre String  @unique
   ki     Int
   precio Decimal
+
+  Personajes_desbloqueados Personajes_desbloqueados[]
+}
+
+model Personajes_desbloqueados {
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
+  id_usuario Int 
+
+  personaje Personaje @relation(fields: [id_personaje], references: [id])
+  id_personaje Int
+
+  @@unique([id_usuario, id_personaje])
 }
