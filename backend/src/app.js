@@ -1,0 +1,112 @@
+require('dotenv').config();
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+ 
+app.use(express.json())
+
+app.get('/', (req, res) => {
+  res.send('DragonBall App!')
+})
+
+app.get('/api/v1/usuarios', async (req, res) => {
+    const usuarios = await prisma.usuario.findMany()
+    res.json(usuarios)
+})
+
+app.get('/api/v1/usuarios/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: { id }
+        })
+        res.json(usuario)
+        
+    } catch (error) {
+        res.status(404).send({error: "Usuario NO encontrado"})
+    }  
+})
+
+app.get('/api/v1/usuarios/:id/personajes', async (req, res) => {
+    const id = Number(req.params.id)
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: { 
+                id
+             }, 
+             include: {
+                Personajes_desbloqueados: true
+             }
+        })
+        res.json(usuario)
+        
+    } catch (error) {
+        res.status(404).send({error: "Usuario NO encontrado"})
+    }  
+})
+
+app.post('/api/v1/usuarios', async (req, res) => {
+  const { nombre, dinero, personaje_seleccionado } = req.body
+
+  if (!nombre) {
+    return res.status(400).json({ error: 'Faltan campos obligatorios' })
+  }
+
+  const nuevo = await prisma.usuario.create({
+    data: {
+      nombre,
+      dinero: dinero,
+      personaje_seleccionado
+    }
+  })
+
+  res.status(201).json(nuevo)
+})
+
+app.delete('/api/v1/usuarios/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    
+    try {
+        const usuario = await prisma.usuario.delete({
+            where: { id: id }
+        })
+        res.status(200).json(usuario)
+
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: "Usuario NO encontrado" })
+        }
+        res.status(500).json({ error: "Error interno al eliminar el usuario" })
+    }
+})
+
+
+app.put('/api/v1/usuarios/:id', async (req, res) => {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "El 'id' debe ser un número válido" });
+    }
+
+    try {
+        const usuario = await prisma.usuario.update({
+            where: { id }, 
+            data: {
+                nombre: req.body.nombre,
+                dinero:  req.body.dinero,
+                personaje_seleccionado: req.body.personaje_seleccionado
+            }
+        })
+        res.status(200).json(usuario)
+    } catch (error) {
+        res.status(404).json({error: "Usuario NO encontrado"})
+    }
+});
+
+app.listen(port, () => {
+  console.log(`Dragon Ball app listening on port ${port}`)
+})

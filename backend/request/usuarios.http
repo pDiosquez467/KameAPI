@@ -1,0 +1,28 @@
+### Obtener todos los personajes
+GET http://localhost:3000/api/v1/usuarios
+Content-Type: application/json
+
+### Obtener un usuario por ID
+GET http://localhost:3000/api/v1/usuarios/3
+Content-Type: application/json
+
+### Crear usuario 
+POST http://localhost:3000/api/v1/usuarios
+Content-Type: application/json
+
+{
+    "nombre": "jhonConnor"
+}
+
+### Borrar un usuario por ID
+DELETE http://localhost:3000/api/v1/usuarios/1
+Content-Type: application/json 
+
+### Modificar personaje 
+PUT http://localhost:3000/api/v1/usuarios/3
+Content-Type: application/json
+
+{
+    "nombre": "laraCroft", 
+    "personaje_seleccionado": "Goku"
+}
